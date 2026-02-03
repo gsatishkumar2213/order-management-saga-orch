@@ -13,7 +13,7 @@ public class PaymentEventProducer {
     }
 
     public void publishPaymentProcessed(PaymentProcessedEvent paymentProcessedEvent) {
-        kafkaTemplate.send("payment-processing", paymentProcessedEvent.orderId().toString(),
+        kafkaTemplate.send("payment-completed", paymentProcessedEvent.orderId().toString(),
                 paymentProcessedEvent);
     }
 }

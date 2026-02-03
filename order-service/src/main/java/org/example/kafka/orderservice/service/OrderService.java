@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -29,9 +30,9 @@ public class OrderService {
     }
 
     // Core Operations
-    public Order createOrder(OrderRequestDTO orderRequestDTO) {
+    public Order createOrder(OrderRequestDTO orderRequestDTO, String idemkey) {
         // TODO: Save order, publish OrderCreatedEvent
-        Order order = new Order(null, orderRequestDTO.customerId()
+        Order order = new Order(null, idemkey, orderRequestDTO.customerId()
                 , orderRequestDTO.amount(), OrderStatus.PENDING, new ArrayList<>(),
                 orderRequestDTO.address());
         List<OrderItem> orderItemList =
@@ -46,6 +47,10 @@ public class OrderService {
                         savedOrder.getCustomerId(), savedOrder.getAmount());
         orderEventProducer.publishOrderCreated(orderCreatedEvent);
         return savedOrder;
+    }
+
+    public Optional<Order> findByIdempotencyKey(String idempotencyKey) {
+        return orderRepository.findByIdempotencyKey(idempotencyKey);
     }
 
     public Order getOrderById(Long orderId) {
@@ -69,7 +74,8 @@ public class OrderService {
         Order orderRepo =
                 orderRepository.findOrderByOrderId(orderId).orElseThrow(() -> new CustomException("No " +
                         "Order Found"));
-        Order order = new Order(orderId, orderRepo.getCustomerId(), orderRepo.getAmount(),
+        Order order = new Order(orderId, orderRepo.getIdempotencyKey(), orderRepo.getCustomerId(),
+                orderRepo.getAmount(),
                 status, orderRepo.getOrderItems(), orderRepo.getCustomerAddress());
         orderRepository.save(order);
         return order;

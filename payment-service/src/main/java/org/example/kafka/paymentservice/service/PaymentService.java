@@ -28,7 +28,7 @@ public class PaymentService {
         this.paymentEventProducer = paymentEventProducer;
     }
 
-    //processPayment(String orderId, double amount) — Main business logic
+
     @Transactional
     public Payment processPayment(PaymentRequestDTO paymentRequestDTO) {
         logger.info("=== PROCESS PAYMENT START ===");
@@ -47,24 +47,24 @@ public class PaymentService {
         return paymentResponse;
     }
 
-    //getPaymentById(String paymentId) — Retrieve payment
+
     public Payment getPaymentById(String paymentId) {
         return paymentRepository.findById(paymentId).orElseThrow(() -> new CustomerException(
                 "Nothing found"));
     }
 
-    //getPaymentByOrderId(String orderId) — Retrieve by order
+
     public Payment getPaymentByOrderId(String orderId) {
         return paymentRepository.findByOrderId(orderId).orElseThrow(() -> new CustomerException(
                 "No order found"));
     }
 
-    //getPaymentsByStatus(String status) — Get all by status
+
     public List<Payment> getPaymentsByStatus(String status) {
         return paymentRepository.findByStatus(status);
     }
 
-    //updatePaymentStatus(String paymentId, String status) — Update status
+
     public Payment updatePaymentStatus(String paymentId, String status) {
         Payment payment = paymentRepository.findById(paymentId).orElseThrow(() ->
                 new CustomerException("No Payment found"));

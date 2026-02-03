@@ -1,7 +1,7 @@
 package org.example.kafka.orderservice.kafka;
 
 import org.example.kafka.events.PaymentProcessedEvent;
-import org.example.kafka.orderservice.constants.OrderStatus;
+import org.example.kafka.orderservice.entity.Order;
 import org.example.kafka.orderservice.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +18,12 @@ public class OrderEventConsumer {
         this.orderService = orderService;
     }
 
-    @KafkaListener(topics = "payment-processing", groupId = "order-service-group")
+    @KafkaListener(topics = "payment-completed", groupId = "order-service-group")
     public void consumerPaymentProcessEvent(PaymentProcessedEvent paymentProcessedEvent) {
-        logger.info("===== CONSUMED PaymentProcessedEvent =====");
-        if (paymentProcessedEvent.status().equalsIgnoreCase(OrderStatus.SUCCESS)) {
-            orderService.updateOrderStatus(paymentProcessedEvent.orderId(),
-                    paymentProcessedEvent.status());
-        }
+        logger.info("===== CONSUMED PaymentProcessedEvent =====" + paymentProcessedEvent);
+        Order response = orderService.updateOrderStatus(paymentProcessedEvent.orderId(),
+                paymentProcessedEvent.status());
+        logger.info("Order Process Completed: " + response.toString());
+
     }
 }

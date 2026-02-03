@@ -13,16 +13,19 @@ public class Order {
     String customerId;
     double amount;
     String orderStatus;
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<OrderItem> orderItems;
     String customerAddress;
-
+    @Column(unique = true)
+    private String idempotencyKey;
+    
     public Order() {
     }
 
-    public Order(Long orderId, String customerId, double amount, String orderStatus,
-                 List<OrderItem> orderItems, String customerAddress) {
+    public Order(Long orderId, String idempotencyKey, String customerId, double amount,
+                 String orderStatus, List<OrderItem> orderItems, String customerAddress) {
         this.orderId = orderId;
+        this.idempotencyKey = idempotencyKey;
         this.customerId = customerId;
         this.amount = amount;
         this.orderStatus = orderStatus;
@@ -76,5 +79,26 @@ public class Order {
 
     public void setCustomerAddress(String customerAddress) {
         this.customerAddress = customerAddress;
+    }
+
+    public String getIdempotencyKey() {
+        return idempotencyKey;
+    }
+
+    public void setIdempotencyKey(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", customerId='" + customerId + '\'' +
+                ", amount=" + amount +
+                ", orderStatus='" + orderStatus + '\'' +
+                ", orderItems=" + orderItems +
+                ", customerAddress='" + customerAddress + '\'' +
+                ", idempotencyKey='" + idempotencyKey + '\'' +
+                '}';
     }
 }

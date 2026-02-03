@@ -1,21 +1,34 @@
-# Order Management System
+# Order Management System - Saga Orchestration
 
-A microservices-based order management platform built with Spring Boot and Apache Kafka. 
-The system demonstrates distributed transaction patterns, event-driven architecture, and 
-exactly-once semantics for reliable message processing.
+A microservices-based order management platform demonstrating **Saga Orchestration Pattern** with
+Spring Boot, Kafka, and PostgreSQL.
 
-**Services:**
-- **Order Service**: REST API for order management
-- **Payment Service**: Payment processing and management
-- **Payment Processing Service**: Kafka consumer implementing exactly-once semantics with idempotency keys
-- **Inventory Service**: Inventory management
-- **Shipment Service**: Shipment tracking
+## Services
 
-**Key Features:**
-- Event-driven architecture using Apache Kafka
-- Saga pattern for distributed transactions
-- Exactly-once message processing guarantees
-- Containerized with Docker and orchestrated with Kubernetes/Docker Compose
-- Comprehensive error handling and validation
+- **Order Service**: REST API for order creation and management with idempotency support
+- **Payment Service**: Saga orchestrator that coordinates payment processing via REST calls
+- **Payment Processing Service**: REST endpoint handling payment processing with idempotent
+  operations
+- **Inventory Service**: (Placeholder for future implementation)
+- **Shipment Service**: (Placeholder for future implementation)
 
-**Tech Stack:** Spring Boot, Kafka, PostgreSQL, Docker, Kubernetes
+## Key Features
+
+- **Saga Orchestration Pattern**: payment-service orchestrates the distributed transaction flow
+- **Idempotency**: Request-level idempotency using idempotency keys to prevent duplicate orders
+- **REST-based Service Communication**: Payment service uses WebClient for synchronous REST calls to
+  payment-processing service
+- **Event-driven Architecture**: Kafka for asynchronous communication between order and payment
+  services
+- **Duplicate Detection**: Prevents duplicate payments for the same order
+- **Comprehensive Error Handling**: Validation and exception handling across all services
+- **PostgreSQL Persistence**: Reliable data storage across services
+
+## Tech Stack
+
+Spring Boot, Kafka, PostgreSQL, WebClient, Docker, Docker Compose
+
+## Related Repository
+
+See [order-management](https://github.com/gondasatishkumar/order-management) for **Choreography
+Pattern** implementation
